@@ -1,6 +1,7 @@
 import { Inter, Jost } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/shared/Navbar";
+import { Toaster } from "react-hot-toast";
 import Footer from "@/components/shared/Footer";
 // 1. Body text ke liye Inter
 const inter = Inter({ 
@@ -29,6 +30,7 @@ export default function RootLayout({ children }) {
         <Navbar />
         {children}
         <Footer />
+        <Toaster position="bottom-right" reverseOrder={false} />
       </body>
     </html>
   );

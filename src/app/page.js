@@ -1,7 +1,7 @@
 // src/app/page.js
 import { Search, MapPin } from "lucide-react";
-import FeaturedJobs from "@/components/modules/FeaturedJobs";
-import PopularCategories from "@/components/modules/PopularCategories";
+import FeaturedJobs from "@/components/modules/home/FeaturedJobs";
+import PopularCategories from "@/components/modules/home/PopularCategories";
 
 export default function Home() {
   return (

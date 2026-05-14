@@ -1,30 +1,35 @@
 // src/components/modules/jobs/JobListingContent.jsx
 "use client";
 
-// 🔥 1. useState aur useEffect import kar
 import { useState, useEffect } from "react";
 import SortByFilter from "./SortByFilter";
 import PerPageFilter from "./PerPageFilter";
-import { Bookmark, Briefcase, MapPin, Clock, Banknote } from "lucide-react";
+import {
+  Bookmark,
+  Briefcase,
+  MapPin,
+  Clock,
+  Banknote,
+  Loader2,
+} from "lucide-react"; // 🔥 Loader2 import kiya spinner ke liye
 import toast from "react-hot-toast";
 import { useBookmarkStore } from "@/store/useBookmarkStore";
 
-const jobs = [
-  // ... tera jobs array waisa hi rahega (flipkart, zomato, etc.)
+// Tera same 20 jobs wala allJobs array...
+const allJobs = [
   {
     id: 1,
     title: "MERN Stack Developer",
     company: "Flipkart",
-    location: "Bengaluru, Karnataka",
+    location: "Bengaluru",
     time: "2 hours ago",
     salary: "₹12L - ₹18L PA",
     description:
-      "Join our core e-commerce team. Looking for strong fundamentals in MongoDB, Express, React, and Node.js. Experience with high-traffic scalable applications is a plus.",
+      "Join our core e-commerce team. Looking for strong fundamentals in MongoDB, Express, React, and Node.js.",
     logoColor: "bg-[#2874F0]",
     logoText: "F",
     badges: [
       { text: "Full Time", style: "bg-blue-50 text-blue-600" },
-      { text: "Private", style: "bg-green-50 text-green-600" },
       { text: "Urgent", style: "bg-amber-50 text-amber-600" },
     ],
   },
@@ -32,74 +37,260 @@ const jobs = [
     id: 2,
     title: "Frontend Engineer (Next.js)",
     company: "Zomato",
-    location: "Gurugram, Haryana",
+    location: "Gurugram",
     time: "5 hours ago",
     salary: "₹15L - ₹22L PA",
     description:
-      "Help us build blazing fast delivery interfaces. You should be an expert in Next.js App Router, SSR, and Tailwind CSS. Obsession with Core Web Vitals is required.",
+      "Help us build blazing fast delivery interfaces. You should be an expert in Next.js App Router and SSR.",
     logoColor: "bg-[#E23744]",
     logoText: "Z",
-    badges: [
-      { text: "Remote", style: "bg-blue-50 text-blue-600" },
-      { text: "Private", style: "bg-green-50 text-green-600" },
-    ],
+    badges: [{ text: "Remote", style: "bg-blue-50 text-blue-600" }],
   },
   {
     id: 3,
     title: "UI/UX Designer",
     company: "Cred",
-    location: "Bengaluru (Hybrid)",
+    location: "Bengaluru",
     time: "11 hours ago",
     salary: "₹20L - ₹30L PA",
     description:
-      "Design premium, Awwwards-worthy experiences for our users. Mastery in Figma, micro-interactions, and a strong portfolio demonstrating minimalistic design is mandatory.",
+      "Design premium, Awwwards-worthy experiences for our users. Mastery in Figma is mandatory.",
     logoColor: "bg-black",
     logoText: "C",
-    badges: [
-      { text: "Full Time", style: "bg-blue-50 text-blue-600" },
-      { text: "Private", style: "bg-green-50 text-green-600" },
-      { text: "Urgent", style: "bg-amber-50 text-amber-600" },
-    ],
+    badges: [{ text: "Full Time", style: "bg-blue-50 text-blue-600" }],
   },
   {
     id: 4,
     title: "Full Stack Developer",
     company: "Reliance Jio",
-    location: "Navi Mumbai, Maharashtra",
+    location: "Navi Mumbai",
     time: "1 day ago",
     salary: "₹8L - ₹14L PA",
     description:
-      "Work on highly scalable internal dashboards and consumer-facing apps. Need solid experience with React, Node.js, and cloud infrastructure deployments.",
+      "Work on highly scalable internal dashboards and consumer-facing apps.",
     logoColor: "bg-[#0A2885]",
     logoText: "J",
-    badges: [
-      { text: "Full Time", style: "bg-blue-50 text-blue-600" },
-      { text: "Private", style: "bg-green-50 text-green-600" },
-    ],
+    badges: [{ text: "Full Time", style: "bg-blue-50 text-blue-600" }],
   },
   {
     id: 5,
-    title: "SEO & Digital Marketing Specialist",
+    title: "SEO Specialist",
     company: "Nykaa",
-    location: "Mumbai, Maharashtra",
+    location: "Mumbai",
     time: "2 days ago",
     salary: "₹6L - ₹9L PA",
     description:
-      "Drive organic growth and manage performance marketing campaigns. Solid understanding of technical SEO, Google Analytics, and content strategies is expected.",
+      "Drive organic growth and manage performance marketing campaigns.",
     logoColor: "bg-[#FC2779]",
     logoText: "N",
-    badges: [
-      { text: "Contract", style: "bg-blue-50 text-blue-600" },
-      { text: "Urgent", style: "bg-amber-50 text-amber-600" },
-    ],
+    badges: [{ text: "Contract", style: "bg-blue-50 text-blue-600" }],
+  },
+  {
+    id: 6,
+    title: "Backend Developer (Go)",
+    company: "PhonePe",
+    location: "Bengaluru",
+    time: "3 days ago",
+    salary: "₹18L - ₹25L PA",
+    description:
+      "Build robust payment gateways and microservices handling millions of TPS.",
+    logoColor: "bg-[#5E32C4]",
+    logoText: "P",
+    badges: [{ text: "Full Time", style: "bg-blue-50 text-blue-600" }],
+  },
+  {
+    id: 7,
+    title: "DevOps Engineer",
+    company: "Zerodha",
+    location: "Bengaluru",
+    time: "3 days ago",
+    salary: "₹20L - ₹28L PA",
+    description:
+      "Manage our AWS infrastructure, Kubernetes clusters, and CI/CD pipelines.",
+    logoColor: "bg-[#387ED1]",
+    logoText: "Z",
+    badges: [{ text: "Remote", style: "bg-blue-50 text-blue-600" }],
+  },
+  {
+    id: 8,
+    title: "Data Scientist",
+    company: "Swiggy",
+    location: "Bengaluru",
+    time: "4 days ago",
+    salary: "₹16L - ₹24L PA",
+    description:
+      "Optimize delivery routes using Machine Learning and predictive analysis.",
+    logoColor: "bg-[#FC8019]",
+    logoText: "S",
+    badges: [{ text: "Full Time", style: "bg-blue-50 text-blue-600" }],
+  },
+  {
+    id: 9,
+    title: "Product Manager",
+    company: "Groww",
+    location: "Bengaluru",
+    time: "4 days ago",
+    salary: "₹25L - ₹35L PA",
+    description:
+      "Lead the mutual funds product line. Define roadmap and coordinate with engineering.",
+    logoColor: "bg-[#00D09C]",
+    logoText: "G",
+    badges: [{ text: "Full Time", style: "bg-blue-50 text-blue-600" }],
+  },
+  {
+    id: 10,
+    title: "iOS Developer",
+    company: "Tata Neu",
+    location: "Mumbai",
+    time: "5 days ago",
+    salary: "₹14L - ₹20L PA",
+    description:
+      "Develop and maintain the Super App ecosystem using Swift and SwiftUI.",
+    logoColor: "bg-[#1E1E1E]",
+    logoText: "T",
+    badges: [{ text: "Full Time", style: "bg-blue-50 text-blue-600" }],
+  },
+  {
+    id: 11,
+    title: "Android Engineer",
+    company: "Dream11",
+    location: "Mumbai",
+    time: "5 days ago",
+    salary: "₹18L - ₹28L PA",
+    description: "Work on high-performance gaming UI using Kotlin and Compose.",
+    logoColor: "bg-[#C41A1B]",
+    logoText: "D",
+    badges: [{ text: "Full Time", style: "bg-blue-50 text-blue-600" }],
+  },
+  {
+    id: 12,
+    title: "QA Automation Engineer",
+    company: "Postman",
+    location: "Remote",
+    time: "6 days ago",
+    salary: "₹12L - ₹18L PA",
+    description: "Write automated E2E tests using Cypress and Playwright.",
+    logoColor: "bg-[#FF6C37]",
+    logoText: "P",
+    badges: [{ text: "Remote", style: "bg-blue-50 text-blue-600" }],
+  },
+  {
+    id: 13,
+    title: "Cloud Security Analyst",
+    company: "Paytm",
+    location: "Noida",
+    time: "1 week ago",
+    salary: "₹10L - ₹15L PA",
+    description:
+      "Ensure compliance and secure cloud infrastructure against vulnerabilities.",
+    logoColor: "bg-[#002970]",
+    logoText: "P",
+    badges: [{ text: "Full Time", style: "bg-blue-50 text-blue-600" }],
+  },
+  {
+    id: 14,
+    title: "Content Strategist",
+    company: "Unacademy",
+    location: "Bengaluru",
+    time: "1 week ago",
+    salary: "₹8L - ₹12L PA",
+    description:
+      "Plan and execute content strategies for educational campaigns.",
+    logoColor: "bg-[#08BD80]",
+    logoText: "U",
+    badges: [{ text: "Full Time", style: "bg-blue-50 text-blue-600" }],
+  },
+  {
+    id: 15,
+    title: "Machine Learning Engineer",
+    company: "Ola",
+    location: "Bengaluru",
+    time: "1 week ago",
+    salary: "₹22L - ₹32L PA",
+    description:
+      "Work on computer vision for autonomous navigation and mapping.",
+    logoColor: "bg-[#000000]",
+    logoText: "O",
+    badges: [{ text: "Full Time", style: "bg-blue-50 text-blue-600" }],
+  },
+  {
+    id: 16,
+    title: "React Native Developer",
+    company: "Myntra",
+    location: "Bengaluru",
+    time: "2 weeks ago",
+    salary: "₹14L - ₹20L PA",
+    description:
+      "Build cross-platform fashion e-commerce features with smooth animations.",
+    logoColor: "bg-[#F13AB1]",
+    logoText: "M",
+    badges: [{ text: "Full Time", style: "bg-blue-50 text-blue-600" }],
+  },
+  {
+    id: 17,
+    title: "Site Reliability Engineer",
+    company: "MakeMyTrip",
+    location: "Gurugram",
+    time: "2 weeks ago",
+    salary: "₹16L - ₹24L PA",
+    description:
+      "Ensure 99.99% uptime for booking engines during holiday traffic surges.",
+    logoColor: "bg-[#D92A2A]",
+    logoText: "M",
+    badges: [{ text: "Full Time", style: "bg-blue-50 text-blue-600" }],
+  },
+  {
+    id: 18,
+    title: "Engineering Manager",
+    company: "Razorpay",
+    location: "Bengaluru",
+    time: "2 weeks ago",
+    salary: "₹40L - ₹60L PA",
+    description:
+      "Lead a team of 10+ engineers to scale the recurring payments system.",
+    logoColor: "bg-[#0A2E5B]",
+    logoText: "R",
+    badges: [{ text: "Full Time", style: "bg-blue-50 text-blue-600" }],
+  },
+  {
+    id: 19,
+    title: "Graphics Designer",
+    company: "Canva India",
+    location: "Remote",
+    time: "3 weeks ago",
+    salary: "₹9L - ₹14L PA",
+    description:
+      "Create stunning templates and marketing assets for global users.",
+    logoColor: "bg-[#00C4CC]",
+    logoText: "C",
+    badges: [{ text: "Remote", style: "bg-blue-50 text-blue-600" }],
+  },
+  {
+    id: 20,
+    title: "Python Developer",
+    company: "Delhivery",
+    location: "Gurugram",
+    time: "1 month ago",
+    salary: "₹11L - ₹16L PA",
+    description:
+      "Write Python scripts for logistics algorithms and data parsing.",
+    logoColor: "bg-[#E0262C]",
+    logoText: "D",
+    badges: [{ text: "Full Time", style: "bg-blue-50 text-blue-600" }],
   },
 ];
 
 export default function JobListingContent() {
   const { toggleBookmark, isBookmarked } = useBookmarkStore();
-
-  // 🔥 2. isMounted state add kar
   const [isMounted, setIsMounted] = useState(false);
+
+  // 🔥 1. Infinite Scroll States
+  const [visibleJobsCount, setVisibleJobsCount] = useState(10);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Array slice hoga base on how many jobs to show
+  const currentJobs = allJobs.slice(0, visibleJobsCount);
+  const totalJobs = allJobs.length;
 
   useEffect(() => {
     setIsMounted(true);
@@ -107,7 +298,6 @@ export default function JobListingContent() {
 
   const handleBookmarkClick = (job) => {
     const isAdded = toggleBookmark(job);
-
     if (isAdded) {
       toast.success("Job saved to bookmarks!", {
         style: { borderRadius: "10px", background: "#333", color: "#fff" },
@@ -119,12 +309,24 @@ export default function JobListingContent() {
     }
   };
 
+  // 🔥 2. Load More Logic (Simulate network request)
+  const handleLoadMore = () => {
+    setIsLoading(true);
+    // Halka sa delay de rahe hain taaki premium feel aaye (backend connect hone pe ye hat jayega)
+    setTimeout(() => {
+      setVisibleJobsCount((prev) => prev + 10);
+      setIsLoading(false);
+    }, 800);
+  };
+
   return (
     <div className="flex-1 w-full flex flex-col gap-8">
       {/* Top Bar */}
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
         <p className="text-sm text-gray-500 font-medium px-2">
-          Showing <span className="text-slate-900 font-bold">10</span> jobs
+          Showing{" "}
+          <span className="text-slate-900 font-bold">{currentJobs.length}</span>{" "}
+          of <span className="text-slate-900 font-bold">{totalJobs}</span> jobs
         </p>
         <div className="flex items-center gap-3">
           <SortByFilter />
@@ -134,8 +336,7 @@ export default function JobListingContent() {
 
       {/* Job Cards */}
       <div className="flex flex-col gap-5">
-        {jobs.map((job) => {
-          // 🔥 3. YAHAN HAI ASLI FIX: Server pe hamesha 'false' dikhayega, mount hone ke baad asli state lega
+        {currentJobs.map((job) => {
           const saved = isMounted ? isBookmarked(job.id) : false;
 
           return (
@@ -143,19 +344,16 @@ export default function JobListingContent() {
               key={job.id}
               className="group flex flex-col sm:flex-row items-start justify-between gap-6 bg-white border border-gray-200 rounded-2xl p-7 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:border-blue-300 transition-all duration-300 w-full cursor-pointer"
             >
-              {/* Left Side: Logo & Details (Waisa hi rahega) */}
               <div className="flex items-start gap-6 w-full">
                 <div
                   className={`w-16 h-16 rounded-xl flex items-center justify-center font-bold text-2xl text-white shrink-0 shadow-sm ${job.logoColor}`}
                 >
                   {job.logoText}
                 </div>
-
                 <div className="flex-1">
                   <h3 className="font-heading text-[20px] font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
                     {job.title}
                   </h3>
-
                   <div className="flex flex-wrap items-center gap-y-3 gap-x-5 text-[13px] text-gray-500 font-medium mb-4">
                     <span className="flex items-center gap-1.5">
                       <Briefcase className="w-4 h-4 text-gray-400" />{" "}
@@ -173,11 +371,9 @@ export default function JobListingContent() {
                       {job.salary}
                     </span>
                   </div>
-
                   <p className="text-[14px] text-slate-500 leading-relaxed mb-5 line-clamp-2 max-w-3xl">
                     {job.description}
                   </p>
-
                   <div className="flex flex-wrap items-center gap-2">
                     {job.badges.map((badge, index) => (
                       <span
@@ -191,7 +387,6 @@ export default function JobListingContent() {
                 </div>
               </div>
 
-              {/* Right Side: Bookmark Button */}
               <div className="sm:self-start flex shrink-0">
                 <button
                   onClick={() => handleBookmarkClick(job)}
@@ -213,16 +408,34 @@ export default function JobListingContent() {
         })}
       </div>
 
-      <div className="flex flex-col items-center justify-center mt-10 mb-20 space-y-4">
+      {/* 🔥 3. "Load More" Button Section */}
+      <div className="flex flex-col items-center justify-center mt-6 mb-20 space-y-5">
         <p className="text-sm text-gray-500 font-medium">
-          Showing 10 of 497 jobs
+          You've viewed {currentJobs.length} of {totalJobs} jobs
         </p>
+
+        {/* Progress Bar */}
         <div className="w-64 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-          <div className="w-1/4 h-full bg-blue-600 rounded-full"></div>
+          <div
+            className="h-full bg-blue-600 rounded-full transition-all duration-500 ease-out"
+            style={{ width: `${(currentJobs.length / totalJobs) * 100}%` }}
+          ></div>
         </div>
-        <button className="text-blue-600 font-bold text-sm hover:text-blue-700 hover:underline mt-2 transition-colors">
-          Show More Listing
-        </button>
+
+        {/* Load More Button */}
+        {currentJobs.length < totalJobs && (
+          <button
+            onClick={handleLoadMore}
+            disabled={isLoading}
+            className="mt-4 px-8 py-3 bg-white border border-gray-200 text-blue-600 font-bold text-sm rounded-xl hover:border-blue-300 hover:shadow-sm transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center min-w-[160px]"
+          >
+            {isLoading ? (
+              <Loader2 className="w-5 h-5 animate-spin text-blue-600" />
+            ) : (
+              "Load More Jobs"
+            )}
+          </button>
+        )}
       </div>
     </div>
   );

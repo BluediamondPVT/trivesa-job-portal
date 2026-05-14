@@ -13,7 +13,7 @@ export default function JobsPage() {
       </div>
 
       {/* Main 2-Column Layout */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col lg:flex-row gap-8 items-start">
+      <main className="max-w-8xl mx-auto px-4 sm:px-6 py-12 flex flex-col lg:flex-row gap-8 items-start">
         
         {/* Left Sidebar */}
         <JobFiltersSidebar />

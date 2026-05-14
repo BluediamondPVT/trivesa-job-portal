@@ -1,9 +1,10 @@
 // src/components/modules/JobFiltersSidebar.jsx
 import { Search, MapPin, Briefcase, ChevronDown, Megaphone } from "lucide-react";
+import CategoryDropdown from "./CategoryDropdown";
 
 export default function JobFiltersSidebar() {
   return (
-    <aside className="w-full lg:w-[320px] shrink-0 space-y-8">
+    <aside className="w-full lg:w-[320px] shrink-0 space-y-8 lg:sticky lg:top-28 lg:h-[calc(100vh-7rem)] lg:overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
       {/* Filters Container */}
       <div className="bg-[#f4f7fc] p-6 rounded-xl border border-gray-100">
         
@@ -35,17 +36,7 @@ export default function JobFiltersSidebar() {
        
         </div> */}
 
-        {/* Category */}
-        <div className="mb-6">
-          <label className="block text-sm font-bold text-slate-900 mb-2">Category</label>
-          <div className="relative cursor-pointer bg-white border border-gray-200 rounded-lg px-4 py-2.5 flex justify-between items-center">
-            <div className="flex items-center gap-2 text-sm text-gray-500">
-              <Briefcase className="w-4 h-4" />
-              <span>Choose a category</span>
-            </div>
-            <ChevronDown className="w-4 h-4 text-gray-400" />
-          </div>
-        </div>
+        <CategoryDropdown />
 
         {/* Job Type (Checkboxes) */}
         <div className="mb-6">

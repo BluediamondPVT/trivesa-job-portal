@@ -9,7 +9,7 @@ const jobs = [
     company: "Segment",
     location: "London, UK",
     time: "11 hours ago",
-    salary: "$35k - $45k",
+    salary: "₹350k - ₹450k",
     logoColor: "bg-[#1E293B]", // Dark Slate
     logoText: "S",
     badges: [
@@ -24,7 +24,7 @@ const jobs = [
     company: "Catalyst",
     location: "London, UK",
     time: "11 hours ago",
-    salary: "$35k - $45k",
+    salary: "₹350k - ₹450k",
     logoColor: "bg-[#4F46E5]", // Indigo
     logoText: "C",
     badges: [
@@ -39,7 +39,7 @@ const jobs = [
     company: "Invision",
     location: "London, UK",
     time: "11 hours ago",
-    salary: "$35k - $45k",
+    salary: "₹350k - ₹450k",
     logoColor: "bg-[#F43F5E]", // Rose
     logoText: "in",
     badges: [
@@ -54,7 +54,7 @@ const jobs = [
     company: "Upwork",
     location: "London, UK",
     time: "11 hours ago",
-    salary: "$35k - $45k",
+    salary: "₹350k - ₹450k",
     logoColor: "bg-[#22C55E]", // Green
     logoText: "up",
     badges: [
@@ -69,7 +69,7 @@ const jobs = [
     company: "Medium",
     location: "London, UK",
     time: "11 hours ago",
-    salary: "$35k - $45k",
+    salary: "₹350k - ₹450k",
     logoColor: "bg-black",
     logoText: "M",
     badges: [
@@ -84,7 +84,7 @@ const jobs = [
     company: "Figma",
     location: "London, UK",
     time: "11 hours ago",
-    salary: "$35k - $45k",
+    salary: "₹350k - ₹450k",
     logoColor: "bg-white border border-gray-200 text-black",
     logoText: "F",
     badges: [

@@ -12,7 +12,7 @@ export default function Footer() {
           {/* Brand Info */}
           <div className="space-y-4">
             <h2 className="font-heading text-2xl font-bold text-white tracking-tight">
-              Blue<span className="text-blue-500">Diamond</span> Jobs
+              Tri<span className="text-blue-500">Vesa</span> Jobs
             </h2>
             <p className="text-sm text-slate-400 leading-relaxed max-w-xs">
               Connecting top talent with industry-leading companies. Your dream career starts right here.

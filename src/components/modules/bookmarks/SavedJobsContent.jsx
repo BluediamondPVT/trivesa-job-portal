@@ -45,8 +45,8 @@ export default function SavedJobsContent() {
             No saved jobs yet
           </h2>
           <p className="text-slate-500 max-w-md mx-auto mb-8">
-            You haven&apos;t bookmarked any jobs. Browse our job listings and click
-            the bookmark icon to save them for later.
+            You haven&apos;t bookmarked any jobs. Browse our job listings and
+            click the bookmark icon to save them for later.
           </p>
           <Link
             href="/jobs"
@@ -66,10 +66,10 @@ export default function SavedJobsContent() {
           </div>
 
           {/* Job Cards Map */}
-          {bookmarks.map((job) => (
+          {bookmarks.map((job, index) => (
             <div
-              key={job.id}
-              className="group flex flex-col sm:flex-row items-start justify-between gap-6 bg-white border border-gray-200 rounded-2xl p-7 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:border-blue-300 transition-all duration-300 w-full"
+              key={`${job.id}-${index}`} 
+              className="group flex flex-col sm:flex-row items-start justify-between gap-6 bg-white border border-gray-200 rounded-2xl p-7 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:border-blue-300 transition-all duration-300 w-full cursor-pointer"
             >
               {/* Left Side: Logo & Details */}
               <div className="flex items-start gap-6 w-full">

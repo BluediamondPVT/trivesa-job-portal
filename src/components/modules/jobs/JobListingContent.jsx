@@ -4,16 +4,8 @@
 import { useState, useEffect } from "react";
 import SortByFilter from "./SortByFilter";
 import PerPageFilter from "./PerPageFilter";
-import {
-  Bookmark,
-  Briefcase,
-  MapPin,
-  Clock,
-  Banknote,
-  Loader2,
-} from "lucide-react"; // 🔥 Loader2 import kiya spinner ke liye
-import toast from "react-hot-toast";
-import { useBookmarkStore } from "@/store/useBookmarkStore";
+import JobCard from "./JobCard";
+import LoadMoreSection from "./LoadMoreSection";
 
 // Tera same 20 jobs wala allJobs array...
 const allJobs = [
@@ -281,14 +273,10 @@ const allJobs = [
 ];
 
 export default function JobListingContent() {
-  const { toggleBookmark, isBookmarked } = useBookmarkStore();
   const [isMounted, setIsMounted] = useState(false);
-
-  // 🔥 1. Infinite Scroll States
   const [visibleJobsCount, setVisibleJobsCount] = useState(10);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Array slice hoga base on how many jobs to show
   const currentJobs = allJobs.slice(0, visibleJobsCount);
   const totalJobs = allJobs.length;
 
@@ -296,23 +284,8 @@ export default function JobListingContent() {
     setIsMounted(true);
   }, []);
 
-  const handleBookmarkClick = (job) => {
-    const isAdded = toggleBookmark(job);
-    if (isAdded) {
-      toast.success("Job saved to bookmarks!", {
-        style: { borderRadius: "10px", background: "#333", color: "#fff" },
-      });
-    } else {
-      toast.error("Job removed from bookmarks.", {
-        style: { borderRadius: "10px", background: "#333", color: "#fff" },
-      });
-    }
-  };
-
-  // 🔥 2. Load More Logic (Simulate network request)
   const handleLoadMore = () => {
     setIsLoading(true);
-    // Halka sa delay de rahe hain taaki premium feel aaye (backend connect hone pe ye hat jayega)
     setTimeout(() => {
       setVisibleJobsCount((prev) => prev + 10);
       setIsLoading(false);
@@ -321,12 +294,11 @@ export default function JobListingContent() {
 
   return (
     <div className="flex-1 w-full flex flex-col gap-8">
+      
       {/* Top Bar */}
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
         <p className="text-sm text-gray-500 font-medium px-2">
-          Showing{" "}
-          <span className="text-slate-900 font-bold">{currentJobs.length}</span>{" "}
-          of <span className="text-slate-900 font-bold">{totalJobs}</span> jobs
+          Showing <span className="text-slate-900 font-bold">{currentJobs.length}</span> of <span className="text-slate-900 font-bold">{totalJobs}</span> jobs
         </p>
         <div className="flex items-center gap-3">
           <SortByFilter />
@@ -334,109 +306,21 @@ export default function JobListingContent() {
         </div>
       </div>
 
-      {/* Job Cards */}
+      {/* 🚀 Main Job Cards List (Cleaned Up) */}
       <div className="flex flex-col gap-5">
-        {currentJobs.map((job) => {
-          const saved = isMounted ? isBookmarked(job.id) : false;
-
-          return (
-            <div
-              key={job.id}
-              className="group flex flex-col sm:flex-row items-start justify-between gap-6 bg-white border border-gray-200 rounded-2xl p-7 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:border-blue-300 transition-all duration-300 w-full cursor-pointer"
-            >
-              <div className="flex items-start gap-6 w-full">
-                <div
-                  className={`w-16 h-16 rounded-xl flex items-center justify-center font-bold text-2xl text-white shrink-0 shadow-sm ${job.logoColor}`}
-                >
-                  {job.logoText}
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-heading text-[20px] font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
-                    {job.title}
-                  </h3>
-                  <div className="flex flex-wrap items-center gap-y-3 gap-x-5 text-[13px] text-gray-500 font-medium mb-4">
-                    <span className="flex items-center gap-1.5">
-                      <Briefcase className="w-4 h-4 text-gray-400" />{" "}
-                      {job.company}
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <MapPin className="w-4 h-4 text-gray-400" />{" "}
-                      {job.location}
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <Clock className="w-4 h-4 text-gray-400" /> {job.time}
-                    </span>
-                    <span className="flex items-center gap-1.5 font-semibold text-slate-700">
-                      <Banknote className="w-4 h-4 text-gray-400" />{" "}
-                      {job.salary}
-                    </span>
-                  </div>
-                  <p className="text-[14px] text-slate-500 leading-relaxed mb-5 line-clamp-2 max-w-3xl">
-                    {job.description}
-                  </p>
-                  <div className="flex flex-wrap items-center gap-2">
-                    {job.badges.map((badge, index) => (
-                      <span
-                        key={index}
-                        className={`px-3 py-1.5 rounded-md text-[11px] font-bold uppercase tracking-wider ${badge.style}`}
-                      >
-                        {badge.text}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="sm:self-start flex shrink-0">
-                <button
-                  onClick={() => handleBookmarkClick(job)}
-                  className={`p-2.5 rounded-full transition-all ${
-                    saved
-                      ? "bg-blue-50 text-blue-600"
-                      : "bg-gray-50 text-gray-400 hover:text-blue-600 hover:bg-blue-50"
-                  }`}
-                >
-                  <Bookmark
-                    className="w-5 h-5"
-                    strokeWidth={saved ? 2.5 : 2}
-                    fill={saved ? "currentColor" : "none"}
-                  />
-                </button>
-              </div>
-            </div>
-          );
-        })}
+        {currentJobs.map((job) => (
+          <JobCard key={job.id} job={job} isMounted={isMounted} />
+        ))}
       </div>
 
-      {/* 🔥 3. "Load More" Button Section */}
-      <div className="flex flex-col items-center justify-center mt-6 mb-20 space-y-5">
-        <p className="text-sm text-gray-500 font-medium">
-          You've viewed {currentJobs.length} of {totalJobs} jobs
-        </p>
-
-        {/* Progress Bar */}
-        <div className="w-64 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-blue-600 rounded-full transition-all duration-500 ease-out"
-            style={{ width: `${(currentJobs.length / totalJobs) * 100}%` }}
-          ></div>
-        </div>
-
-        {/* Load More Button */}
-        {currentJobs.length < totalJobs && (
-          <button
-            onClick={handleLoadMore}
-            disabled={isLoading}
-            className="mt-4 px-8 py-3 bg-white border border-gray-200 text-blue-600 font-bold text-sm rounded-xl hover:border-blue-300 hover:shadow-sm transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center min-w-[160px]"
-          >
-            {isLoading ? (
-              <Loader2 className="w-5 h-5 animate-spin text-blue-600" />
-            ) : (
-              "Load More Jobs"
-            )}
-          </button>
-        )}
-      </div>
+      {/* 🚀 Load More Section (Cleaned Up) */}
+      <LoadMoreSection 
+        currentCount={currentJobs.length} 
+        totalCount={totalJobs} 
+        onLoadMore={handleLoadMore} 
+        isLoading={isLoading} 
+      />
+      
     </div>
   );
 }

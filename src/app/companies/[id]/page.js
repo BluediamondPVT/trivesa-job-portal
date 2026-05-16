@@ -41,6 +41,7 @@ export default async function CompanyDetailsPage({ params }) {
       "Infosys is a global leader in next-generation digital services and consulting. We enable clients in more than 50 countries to navigate their digital transformation. With over four decades of experience in managing the systems and workings of global enterprises, we expertly steer our clients through their digital journey.",
     purpose:
       "To amplify human potential and create the next opportunity for people, businesses and communities. We believe in building a better world through technology, continuous learning, and sustainable growth.",
+      videoId: "XUG-LwgI_rQ",
 
     // Exact jobs matching the company
     openJobsList: [
@@ -83,7 +84,7 @@ export default async function CompanyDetailsPage({ params }) {
     <div className="min-h-screen bg-slate-50">
       <CompanyBanner bannerImg={companyData.bannerImg} />
       <CompanyOverview company={companyData} />
-      <CompanyPurpose purpose={companyData.purpose} />
+      <CompanyPurpose purpose={companyData.purpose} videoId={companyData.videoId} />
       <CompanyOpenJobs
         companyName={companyData.name}
         openJobsList={companyData.openJobsList}

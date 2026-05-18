@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { Bookmark } from "lucide-react"; // Menu aur X hata diya yahan se
 import { AnimatePresence } from "framer-motion";
 import { useBookmarkStore } from "@/store/useBookmarkStore";
-
+import { usePathname } from "next/navigation";
 import DesktopNav from "./navbar/DesktopNav";
 import RightActions from "./navbar/RightActions";
 import MobileMenu from "./navbar/MobileMenu";
@@ -19,6 +19,7 @@ const navLinks = [
 ];
 
 export default function Navbar() {
+  const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const { bookmarks } = useBookmarkStore();
@@ -33,6 +34,13 @@ export default function Navbar() {
       document.body.style.overflow = "auto";
     };
   }, [isMobileMenuOpen]);
+
+
+  
+const hideOnRoutes = ["/login", "/sign-up"];
+  if (hideOnRoutes.includes(pathname)) {
+    return null;
+  }
 
   return (
     // 🔥 Navbar z-index updated to z-[100] so it sits above everything

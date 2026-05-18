@@ -1,7 +1,15 @@
 // src/components/shared/Footer.jsx
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function Footer() {
+  const pathname = usePathname();
+  const hideOnRoutes = ["/login", "/sign-up"];
+  if (hideOnRoutes.includes(pathname)) {
+    return null;
+  }
   return (
     <footer className="bg-slate-900 text-slate-300 py-16 border-t border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">

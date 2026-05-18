@@ -31,7 +31,10 @@ export default function RightActions() {
 
       <div className="h-6 w-px bg-gray-200"></div>
 
-      <Link href="/login" className="bg-slate-900 hover:bg-black text-white text-sm font-semibold py-2.5 px-6 rounded-full transition-all shadow-[0_4px_14px_0_rgb(0,0,0,0.1)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.15)] hover:-translate-y-0.5">
+      <Link
+        href="/login"
+        className="bg-slate-900 hover:bg-black text-white text-sm font-semibold py-2.5 px-6 rounded-full transition-all shadow-[0_4px_14px_0_rgb(0,0,0,0.1)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.15)] hover:-translate-y-0.5"
+      >
         Log In
       </Link>
     </div>

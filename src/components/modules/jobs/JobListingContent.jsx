@@ -2,10 +2,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation"; // 🚀 Router import kiya navigation ke liye
+
 import SortByFilter from "./SortByFilter";
 import PerPageFilter from "./PerPageFilter";
 import JobCard from "./JobCard";
 import LoadMoreSection from "./LoadMoreSection";
+
+// 🔥 Naye imports Modal aur Zustand store ke liye
+import LoginPromptModal from "@/components/shared/LoginPromptModal";
+import { useAuthStore } from "@/store/useAuthStore"; // Ensure karna ye path sahi ho
 
 // Tera same 20 jobs wala allJobs array...
 const allJobs = [
@@ -277,6 +283,11 @@ export default function JobListingContent() {
   const [visibleJobsCount, setVisibleJobsCount] = useState(10);
   const [isLoading, setIsLoading] = useState(false);
 
+  // 🚀 Auth & Modal states
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const { isAuthenticated } = useAuthStore(); // Zustand se check kiya logged in hai ya nahi
+  const router = useRouter();
+
   const currentJobs = allJobs.slice(0, visibleJobsCount);
   const totalJobs = allJobs.length;
 
@@ -292,13 +303,25 @@ export default function JobListingContent() {
     }, 800);
   };
 
+  // 🔥 Yahan main logic hai
+  const handleJobAction = (jobId) => {
+    if (!isAuthenticated) {
+      // Agar user bina login kare aaya hai, toh Modal open kar do
+      setShowLoginModal(true);
+    } else {
+      // Agar user logged in hai, toh mast usko Job Details page pe push kar do
+      router.push(`/jobs/${jobId}`);
+    }
+  };
+
   return (
     <div className="flex-1 w-full flex flex-col gap-8">
-      
       {/* Top Bar */}
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
         <p className="text-sm text-gray-500 font-medium px-2">
-          Showing <span className="text-slate-900 font-bold">{currentJobs.length}</span> of <span className="text-slate-900 font-bold">{totalJobs}</span> jobs
+          Showing{" "}
+          <span className="text-slate-900 font-bold">{currentJobs.length}</span>{" "}
+          of <span className="text-slate-900 font-bold">{totalJobs}</span> jobs
         </p>
         <div className="flex items-center gap-3">
           <SortByFilter />
@@ -306,21 +329,32 @@ export default function JobListingContent() {
         </div>
       </div>
 
-      {/* 🚀 Main Job Cards List (Cleaned Up) */}
+      {/* 🚀 Main Job Cards List */}
       <div className="flex flex-col gap-5">
         {currentJobs.map((job) => (
-          <JobCard key={job.id} job={job} isMounted={isMounted} />
+          <JobCard
+            key={job.id}
+            job={job}
+            isMounted={isMounted}
+            // 🔥 Naya prop paas kiya taaki andar se click hone pe function trigger ho sake
+            onActionClick={() => handleJobAction(job.id)}
+          />
         ))}
       </div>
 
-      {/* 🚀 Load More Section (Cleaned Up) */}
-      <LoadMoreSection 
-        currentCount={currentJobs.length} 
-        totalCount={totalJobs} 
-        onLoadMore={handleLoadMore} 
-        isLoading={isLoading} 
+      {/* 🚀 Load More Section */}
+      <LoadMoreSection
+        currentCount={currentJobs.length}
+        totalCount={totalJobs}
+        onLoadMore={handleLoadMore}
+        isLoading={isLoading}
       />
-      
+
+      {/* 🛡️ Login Prompt Modal (Ye chupa rahega jab tak isOpen true na ho) */}
+      <LoginPromptModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+      />
     </div>
   );
 }

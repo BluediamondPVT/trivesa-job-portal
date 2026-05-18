@@ -7,6 +7,10 @@ import { Bookmark, Briefcase, MapPin, Clock, Banknote } from "lucide-react";
 import { useBookmarkStore } from "@/store/useBookmarkStore";
 import toast from "react-hot-toast";
 
+// 🔥 Naye imports Auth Store aur Modal ke liye
+import { useAuthStore } from "@/store/useAuthStore";
+import LoginPromptModal from "@/components/shared/LoginPromptModal";
+
 // 🔥 Indian Tech Companies Dummy Data
 const jobs = [
   {
@@ -21,7 +25,7 @@ const jobs = [
     badges: [
       { text: "Full Time", style: "bg-blue-50 text-blue-600" },
       { text: "Urgent", style: "bg-amber-50 text-amber-600" },
-    ]
+    ],
   },
   {
     id: 2,
@@ -35,7 +39,7 @@ const jobs = [
     badges: [
       { text: "Remote", style: "bg-emerald-50 text-emerald-600" },
       { text: "Full Time", style: "bg-blue-50 text-blue-600" },
-    ]
+    ],
   },
   {
     id: 3,
@@ -49,7 +53,7 @@ const jobs = [
     badges: [
       { text: "Full Time", style: "bg-blue-50 text-blue-600" },
       { text: "Premium", style: "bg-purple-50 text-purple-600" },
-    ]
+    ],
   },
   {
     id: 4,
@@ -63,7 +67,7 @@ const jobs = [
     badges: [
       { text: "Full Time", style: "bg-blue-50 text-blue-600" },
       { text: "On-site", style: "bg-gray-100 text-gray-600" },
-    ]
+    ],
   },
   {
     id: 5,
@@ -77,7 +81,7 @@ const jobs = [
     badges: [
       { text: "Full Time", style: "bg-blue-50 text-blue-600" },
       { text: "Urgent", style: "bg-amber-50 text-amber-600" },
-    ]
+    ],
   },
   {
     id: 6,
@@ -91,8 +95,8 @@ const jobs = [
     badges: [
       { text: "Full Time", style: "bg-blue-50 text-blue-600" },
       { text: "Hybrid", style: "bg-indigo-50 text-indigo-600" },
-    ]
-  }
+    ],
+  },
 ];
 
 export default function FeaturedJobs() {
@@ -100,12 +104,21 @@ export default function FeaturedJobs() {
   const { toggleBookmark, isBookmarked } = useBookmarkStore();
   const [isMounted, setIsMounted] = useState(false);
 
+  // 🚀 Auth Store aur Modal State
+  const { isAuthenticated } = useAuthStore();
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
+  // 🔥 Protected Route Logic
   const handleCardClick = (id) => {
-    router.push(`/jobs/${id}`);
+    if (!isAuthenticated) {
+      setShowLoginModal(true);
+    } else {
+      router.push(`/jobs/${id}`);
+    }
   };
 
   const handleBookmarkClick = (e, job) => {
@@ -123,8 +136,7 @@ export default function FeaturedJobs() {
   };
 
   return (
-    <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-20 bg-white">
-      
+    <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-20 bg-white relative">
       {/* Header Section */}
       <div className="text-center mb-10 sm:mb-12">
         <h2 className="font-heading text-3xl md:text-4xl font-bold text-slate-900 mb-3">
@@ -141,32 +153,42 @@ export default function FeaturedJobs() {
           const saved = isMounted ? isBookmarked(job.id) : false;
 
           return (
-            <div 
-              key={job.id} 
-              onClick={() => handleCardClick(job.id)}
+            <div
+              key={job.id}
+              onClick={() => handleCardClick(job.id)} // 🔥 Yahan Auth wala naya logic use ho raha hai
               className="group flex flex-col sm:flex-row items-start gap-4 bg-white border border-gray-200 rounded-[20px] p-5 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:border-blue-300 transition-all duration-300 cursor-pointer"
             >
               {/* ========================================= */}
               {/* 📱 MOBILE VIEW TOP ROW (Logo + Bookmark) */}
               {/* ========================================= */}
               <div className="flex justify-between items-start w-full sm:hidden mb-1">
-                <div className={`w-[50px] h-[50px] rounded-2xl flex items-center justify-center font-bold text-2xl text-white shadow-sm ${job.logoColor}`}>
+                <div
+                  className={`w-[50px] h-[50px] rounded-2xl flex items-center justify-center font-bold text-2xl text-white shadow-sm ${job.logoColor}`}
+                >
                   {job.logoText}
                 </div>
                 <button
                   onClick={(e) => handleBookmarkClick(e, job)}
                   className={`p-2 rounded-full border transition-all ${
-                    saved ? "bg-blue-50 border-blue-100 text-blue-600" : "bg-transparent border-gray-100 text-gray-400 hover:text-blue-600"
+                    saved
+                      ? "bg-blue-50 border-blue-100 text-blue-600"
+                      : "bg-transparent border-gray-100 text-gray-400 hover:text-blue-600"
                   }`}
                 >
-                  <Bookmark className="w-[18px] h-[18px]" strokeWidth={saved ? 2.5 : 2} fill={saved ? "currentColor" : "none"} />
+                  <Bookmark
+                    className="w-[18px] h-[18px]"
+                    strokeWidth={saved ? 2.5 : 2}
+                    fill={saved ? "currentColor" : "none"}
+                  />
                 </button>
               </div>
 
               {/* ========================================= */}
               {/* 💻 DESKTOP LOGO (Hidden on Mobile) */}
               {/* ========================================= */}
-              <div className={`hidden sm:flex w-14 h-14 rounded-xl items-center justify-center font-bold text-xl text-white shrink-0 shadow-sm ${job.logoColor}`}>
+              <div
+                className={`hidden sm:flex w-14 h-14 rounded-xl items-center justify-center font-bold text-xl text-white shrink-0 shadow-sm ${job.logoColor}`}
+              >
                 {job.logoText}
               </div>
 
@@ -174,7 +196,6 @@ export default function FeaturedJobs() {
               {/* MAIN CONTENT AREA */}
               {/* ========================================= */}
               <div className="flex-1 w-full flex flex-col">
-                
                 {/* Title & Company */}
                 <div className="flex justify-between items-start mb-3 sm:mb-2">
                   <div>
@@ -190,10 +211,16 @@ export default function FeaturedJobs() {
                   <button
                     onClick={(e) => handleBookmarkClick(e, job)}
                     className={`hidden sm:flex p-2 rounded-full transition-all shrink-0 ${
-                      saved ? "bg-blue-50 text-blue-600" : "bg-gray-50 text-gray-400 hover:text-blue-600 hover:bg-blue-50"
+                      saved
+                        ? "bg-blue-50 text-blue-600"
+                        : "bg-gray-50 text-gray-400 hover:text-blue-600 hover:bg-blue-50"
                     }`}
                   >
-                    <Bookmark className="w-5 h-5" strokeWidth={saved ? 2.5 : 1.5} fill={saved ? "currentColor" : "none"} />
+                    <Bookmark
+                      className="w-5 h-5"
+                      strokeWidth={saved ? 2.5 : 1.5}
+                      fill={saved ? "currentColor" : "none"}
+                    />
                   </button>
                 </div>
 
@@ -201,25 +228,40 @@ export default function FeaturedJobs() {
                 <div className="flex flex-col gap-2 sm:hidden text-[12px] text-gray-500 font-medium mb-3">
                   <div className="flex items-center gap-4">
                     <span className="flex items-center gap-1.5">
-                      <Briefcase className="w-[14px] h-[14px] text-gray-400" strokeWidth={2} />
+                      <Briefcase
+                        className="w-[14px] h-[14px] text-gray-400"
+                        strokeWidth={2}
+                      />
                       1-5 Yrs
                     </span>
                     <span className="flex items-center gap-1.5 font-semibold text-slate-600">
-                      <Banknote className="w-[14px] h-[14px] text-gray-400" strokeWidth={2} />
+                      <Banknote
+                        className="w-[14px] h-[14px] text-gray-400"
+                        strokeWidth={2}
+                      />
                       {job.salary}
                     </span>
                   </div>
                   <span className="flex items-center gap-1.5">
-                    <MapPin className="w-[14px] h-[14px] text-gray-400" strokeWidth={2} />
+                    <MapPin
+                      className="w-[14px] h-[14px] text-gray-400"
+                      strokeWidth={2}
+                    />
                     {job.location}
                   </span>
                 </div>
 
                 {/* 💻 DESKTOP META ROW */}
                 <div className="hidden sm:flex flex-wrap items-center gap-y-2 gap-x-4 text-[12px] sm:text-[13px] text-gray-500 font-medium mb-4">
-                  <span className="flex items-center gap-1.5"><Briefcase className="w-4 h-4 text-gray-400" /> 1-5 Yrs</span>
-                  <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4 text-gray-400" /> {job.location}</span>
-                  <span className="flex items-center gap-1.5 font-semibold text-slate-700"><Banknote className="w-4 h-4 text-gray-400" /> {job.salary}</span>
+                  <span className="flex items-center gap-1.5">
+                    <Briefcase className="w-4 h-4 text-gray-400" /> 1-5 Yrs
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <MapPin className="w-4 h-4 text-gray-400" /> {job.location}
+                  </span>
+                  <span className="flex items-center gap-1.5 font-semibold text-slate-700">
+                    <Banknote className="w-4 h-4 text-gray-400" /> {job.salary}
+                  </span>
                 </div>
 
                 {/* 📱 MOBILE DIVIDER */}
@@ -240,10 +282,11 @@ export default function FeaturedJobs() {
 
                   <div className="flex items-center gap-1.5 text-[11px] sm:text-[12px] text-gray-400 font-medium">
                     <Clock className="w-[13px] h-[13px]" strokeWidth={2} />
-                    {job.time.toLowerCase().includes("posted") ? job.time : `Posted ${job.time}`}
+                    {job.time.toLowerCase().includes("posted")
+                      ? job.time
+                      : `Posted ${job.time}`}
                   </div>
                 </div>
-
               </div>
             </div>
           );
@@ -253,13 +296,18 @@ export default function FeaturedJobs() {
       {/* Load More Button */}
       <div className="mt-10 sm:mt-12 flex justify-center">
         <button
-          onClick={() => router.push('/jobs')}
+          onClick={() => router.push("/jobs")}
           className="bg-[#1864f4] hover:bg-blue-700 cursor-pointer text-white font-bold py-3 px-8 rounded-xl shadow-[0_4px_14px_0_rgba(24,100,244,0.39)] hover:shadow-[0_6px_20px_rgba(24,100,244,0.23)] transition-all hover:-translate-y-0.5 text-sm"
         >
           Load More Listings
         </button>
       </div>
 
+      {/* 🛡️ Login Prompt Modal */}
+      <LoginPromptModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+      />
     </section>
   );
 }

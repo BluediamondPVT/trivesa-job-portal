@@ -3,15 +3,26 @@
 
 import { useState } from "react";
 import { Search } from "lucide-react";
+import { useRouter } from "next/navigation"; // 🚀 Router import kiya navigation ke liye
+
 import { companiesData } from "./companiesData";
 import CompanySearch from "./CompanySearch";
 import CompanyCard from "./CompanyCard";
 import CompanyPagination from "./CompanyPagination";
 
+// 🔥 Naye imports Auth Store aur Modal ke liye
+import { useAuthStore } from "@/store/useAuthStore";
+import LoginPromptModal from "@/components/shared/LoginPromptModal";
+
 export default function CompanyListing() {
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   const [visibleCount, setVisibleCount] = useState(6);
   const [isLoading, setIsLoading] = useState(false);
+
+  // 🚀 Auth Store aur Modal State
+  const { isAuthenticated } = useAuthStore();
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   // Filter Logic
   const filteredCompanies = companiesData.filter(
@@ -38,8 +49,17 @@ export default function CompanyListing() {
     }, 800);
   };
 
+  // 🔥 Protected Route Logic for Companies
+  const handleCompanyAction = (companyId) => {
+    if (!isAuthenticated) {
+      setShowLoginModal(true); // Login nahi hai toh modal dikhao
+    } else {
+      router.push(`/companies/${companyId}`); // Login hai toh company details page pe bhej do
+    }
+  };
+
   return (
-    <div className="w-full flex flex-col gap-10">
+    <div className="w-full flex flex-col gap-10 relative">
       <CompanySearch
         searchTerm={searchTerm}
         onSearchChange={handleSearchChange}
@@ -48,7 +68,12 @@ export default function CompanyListing() {
       {/* Grid Layout */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {currentCompanies.map((company) => (
-          <CompanyCard key={company.id} company={company} />
+          <CompanyCard 
+            key={company.id} 
+            company={company} 
+            // 🔥 Naya prop paas kiya
+            onActionClick={() => handleCompanyAction(company.id)}
+          />
         ))}
       </div>
 
@@ -73,6 +98,12 @@ export default function CompanyListing() {
         totalLength={totalCompanies}
         isLoading={isLoading}
         onLoadMore={handleLoadMore}
+      />
+
+      {/* 🛡️ Login Prompt Modal */}
+      <LoginPromptModal 
+        isOpen={showLoginModal} 
+        onClose={() => setShowLoginModal(false)} 
       />
     </div>
   );

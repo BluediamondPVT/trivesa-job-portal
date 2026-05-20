@@ -80,7 +80,7 @@ export default function Navbar() {
             className="relative w-10 h-10 bg-white border border-gray-200 rounded-full flex flex-col items-center justify-center gap-[4.5px] z-50 overflow-hidden shadow-sm hover:bg-gray-50 transition-colors outline-none"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
-            <span className={`block w-[18px] h-[2px] bg-slate-800 rounded-full transition-all duration-300 ease-out ${isMobileMenuOpen ? "transform rotate-45 translate-y-[6.5px]" : ""}`} />
+            <span className={`block w-4.5 h-[2px] bg-slate-800 rounded-full transition-all duration-300 ease-out ${isMobileMenuOpen ? "transform rotate-45 translate-y-[6.5px]" : ""}`} />
             <span className={`block w-[18px] h-[2px] bg-slate-800 rounded-full transition-all duration-300 ease-out ${isMobileMenuOpen ? "opacity-0 translate-x-4" : "opacity-100"}`} />
             <span className={`block w-[18px] h-[2px] bg-slate-800 rounded-full transition-all duration-300 ease-out ${isMobileMenuOpen ? "transform -rotate-45 -translate-y-[6.5px]" : ""}`} />
           </button>

@@ -38,16 +38,14 @@ function LoginContent() {
     }
   };
 
-  const handleVerifyAndLogin = () => {
-    // Dummy user data simulate kar rahe hain
+ const handleVerifyAndLogin = () => {
     const dummyUser = {
       name: "Abhi Developer",
       phone: phoneNumber,
-      avatar: "A",
+      avatar: "/abc.avif", // 🔥 Navbar ke liye yahan image path daal de!
     };
-
-    login(dummyUser);
-    router.push(redirectPath);
+    login(dummyUser); 
+    router.push(redirectPath); 
   };
 
   const handleBackToNumber = () => setStep(1);

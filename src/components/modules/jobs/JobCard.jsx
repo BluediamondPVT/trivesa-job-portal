@@ -1,11 +1,18 @@
 // src/components/modules/jobs/JobCard.jsx
 "use client";
 
-import { Bookmark, Briefcase, MapPin, Clock, Banknote } from "lucide-react";
+// 🔥 Users icon import kiya vacancies ke liye
+import {
+  Bookmark,
+  Briefcase,
+  MapPin,
+  Clock,
+  Banknote,
+  Users,
+} from "lucide-react";
 import { useBookmarkStore } from "@/store/useBookmarkStore";
 import toast from "react-hot-toast";
 
-// 🔥 Naya prop 'onActionClick' add kiya
 export default function JobCard({ job, isMounted, onActionClick }) {
   const { toggleBookmark, isBookmarked } = useBookmarkStore();
   const saved = isMounted ? isBookmarked(job.id) : false;
@@ -26,7 +33,7 @@ export default function JobCard({ job, isMounted, onActionClick }) {
 
   return (
     <div
-      onClick={onActionClick} // 🔥 Ye line bohot important hai!
+      onClick={onActionClick}
       className="group relative bg-white border border-gray-200 rounded-2xl p-5 sm:p-7 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:border-blue-300 transition-all duration-300 w-full cursor-pointer flex flex-col sm:flex-row gap-4 sm:gap-6"
     >
       {/* 🔥 MOBILE BOOKMARK (Absolute Top-Right for Naukri feel) */}
@@ -56,8 +63,6 @@ export default function JobCard({ job, isMounted, onActionClick }) {
       <div className="flex-1 w-full">
         {/* Title & Company */}
         <div className="pr-10 sm:pr-0">
-          {" "}
-          {/* pr-10 on mobile so text doesn't hit the bookmark icon */}
           <h3 className="font-heading text-[17px] sm:text-[20px] font-bold text-slate-900 mb-1 group-hover:text-blue-600 transition-colors leading-snug">
             {job.title}
           </h3>
@@ -66,12 +71,11 @@ export default function JobCard({ job, isMounted, onActionClick }) {
           </p>
         </div>
 
-        {/* Compact Info Row (Experience, Salary, Location) */}
+        {/* Compact Info Row (Experience, Salary, Location, Vacancies) */}
         <div className="flex flex-wrap items-center gap-y-2 gap-x-4 sm:gap-x-5 text-[12px] sm:text-[13px] text-gray-500 font-medium mb-3 sm:mb-4">
           <span className="flex items-center gap-1.5">
             <Briefcase className="w-4 h-4 text-gray-400" />
-            1-5 Yrs{" "}
-            {/* Optional: Agar actual exp data ho toh yahan variable daal dena */}
+            1-5 Yrs
           </span>
           <span className="flex items-center gap-1.5">
             <Banknote className="w-4 h-4 text-gray-400" />
@@ -80,6 +84,11 @@ export default function JobCard({ job, isMounted, onActionClick }) {
           <span className="flex items-center gap-1.5">
             <MapPin className="w-4 h-4 text-gray-400" />
             {job.location}
+          </span>
+          {/* 🔥 NAYA ADDITION: Vacancies */}
+          <span className="flex items-center gap-1.5">
+            <Users className="w-4 h-4 text-gray-400" />
+            {job.vacancies ? `${job.vacancies} Openings` : "2 Openings"}
           </span>
         </div>
 
